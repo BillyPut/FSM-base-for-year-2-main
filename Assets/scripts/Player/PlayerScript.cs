@@ -26,6 +26,7 @@ namespace Player
         public float jumpGravity = 0.6f;
         public float initialJumpVel = 10f;
         public float xv, yv;
+        
 
         Dir lastDir;
         Dir currentDir;
@@ -45,6 +46,7 @@ namespace Player
         public JumpingState jumpingState;
         public CrouchingState crouchingState;
         public MovingState movingState;
+        public StandingShootState standingShootState;
 
         public StateMachine sm;
 
@@ -71,6 +73,7 @@ namespace Player
             jumpingState = new JumpingState(this, sm);
             crouchingState = new CrouchingState(this, sm);
             movingState = new MovingState(this, sm);
+            standingShootState = new StandingShootState(this, sm);
             
             // initialise the statemachine with the default state
             sm.Init(standingState);
@@ -78,21 +81,28 @@ namespace Player
             
             sh.SetSpriteXDirection(Dir.Right);
 
-            
+            jumpFlag = true;
 
         }
 
         // Update is called once per frame
         public void Update()
         {
+          
             sm.CurrentState.HandleInput();
             sm.CurrentState.LogicUpdate();
 
-            CheckForCrouch();
-            CheckForJump();
-            CheckForStand();
-            CheckForMove();
+            //CheckForCrouch();
+            //CheckForJump();
+            //CheckForStand();
+            //CheckForMove();
+            //CheckForLand();
 
+            if (onPlatform == false)
+            {
+                //yv = -2;
+            }
+            
 
             //output debug info to the canvas
             string s;
@@ -135,21 +145,30 @@ namespace Player
             if ((yv <= 1) && (onPlatform == true))
             {
                 yv = 0;
+                xv = 0;
                 rb.velocity = new Vector2(0, 0);
 
                 jumpFlag = false;
 
-                // round to 0.5
+                /* round to 0.5
                 pos.y = Mathf.Round(pos.y);
 
-                //pos.y = (Mathf.Round(pos.y * 2)) / 2;
+                pos.y = (Mathf.Round(pos.y * 2)) / 2;
 
-                //print("Landed! y was=" + transform.position.y + "  and is now " + pos.y);
+                print("Landed! y was=" + transform.position.y + "  and is now " + pos.y);*/
 
-                sm.ChangeState(standingState);
+                
+                //sm.ChangeState(standingState);
 
                 rb.transform.position = pos;
             }
+            else
+            {
+                jumpFlag = true;
+                yv -= 6f * Time.deltaTime;
+            }
+            
+         
             
         }
 
@@ -157,16 +176,11 @@ namespace Player
 
         public void CheckForStand()
         {
-            if (onPlatform == true)
-            {
 
-                if (Input.GetKey("left") == false) // key held down
-                {
-                    if (Input.GetKey("right") == false) // key held down
-                    {
-                        sm.ChangeState(standingState);
-                    }
-                }
+            if (!Input.anyKey && onPlatform == true)
+            {
+                sm.ChangeState(standingState);
+
 
             }
 
@@ -195,19 +209,43 @@ namespace Player
             {
                 if (crouchButtonPressed == true)
                 {
-                    sm.ChangeState(crouchingState);
+                    if (!Input.GetKey("right"))
+                    {
+                        if (!Input.GetKey("left"))
+                        {
+                            sm.ChangeState(crouchingState);
+                        }
+                    }
+                  
+                    
                 }
             }
 
         }
 
-        public void CheckForMove()
+        
+        public void CheckForWalk()
         {
             if (Input.GetKey("right"))
             {
                 sm.ChangeState(movingState);
             }
+            if (Input.GetKey("left"))
+            {
+                
+                sm.ChangeState(movingState);
+            }
         }
+
+        public void CheckForStandingShoot()
+        {
+            if (shootButtonPressed == true)
+            {
+                sm.ChangeState(standingShootState);
+             
+            }
+        }
+
 
 
         public void ReadInputKeys()

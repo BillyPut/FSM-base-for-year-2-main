@@ -1,36 +1,31 @@
 
 using UnityEngine;
+
 namespace Player
 {
-    public class MovingState : State
+    public class StandingShootState : State
     {
-
+        public GameObject lance;
 
         // constructor
-        public MovingState(PlayerScript player, StateMachine sm) : base(player, sm)
+        public StandingShootState(PlayerScript player, StateMachine sm) : base(player, sm)
         {
         }
 
         public override void Enter()
         {
             base.Enter();
-            //player.anim.Play("arthur_run", 0, 0);
-            if (Input.GetKey("right"))
-            {
-                player.xv = 5;
-            }
-            if (Input.GetKey("left"))
-            {
-                player.xv = -5;
-            }
 
+            player.xv = 0;
+            //Instantiate(lance, new Vector3(player.transform.position.x, player.transform.position.y, 0), Quaternion.identity);
+          
         }
 
         public override void Exit()
         {
             base.Exit();
-            
-            
+
+
         }
 
         public override void HandleInput()
@@ -43,22 +38,15 @@ namespace Player
             base.LogicUpdate();
 
             player.CheckForStand();
+            player.CheckForWalk();
             player.CheckForLand();
             player.CheckForJump();
             player.CheckForCrouch();
-            player.CheckForStandingShoot();
+
         }
 
         public override void PhysicsUpdate()
         {
-            if (Input.GetKey("right"))
-            {
-                player.xv = 5;
-            }
-            if (Input.GetKey("left"))
-            {
-                player.xv = -5;
-            }
             base.PhysicsUpdate();
         }
     }

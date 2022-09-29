@@ -12,15 +12,25 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
-            player.anim.Play("arther_jump_forward", 0, 0);
-            player.yv = 5;
+            //player.anim.Play("arther_jump_forward", 0, 0);
+            if (player.jumpFlag == false)
+            {
+                player.yv = 5;
+            }
+            else
+            {
+                Exit();
+            }
+            
+            
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            player.anim.SetBool("jump_up", false);
+            
+            
         }
 
         public override void HandleInput()
@@ -31,6 +41,10 @@ namespace Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            
+            player.CheckForLand();
+            player.CheckForStand();
         }
 
         public override void PhysicsUpdate()

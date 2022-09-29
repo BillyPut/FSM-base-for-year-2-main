@@ -14,15 +14,16 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
-            player.anim.Play("arthur_stand", 0, 0);
+            //player.anim.Play("arthur_stand", 0, 0);
             player.xv = 0;
+            
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            player.anim.SetBool("stand", false );
+            
         }
 
         public override void HandleInput()
@@ -33,6 +34,13 @@ namespace Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            player.CheckForWalk();
+            player.CheckForLand();
+            player.CheckForJump();
+            player.CheckForCrouch();
+            player.CheckForStandingShoot();
+
         }
 
         public override void PhysicsUpdate()

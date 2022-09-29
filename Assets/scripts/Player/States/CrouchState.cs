@@ -13,7 +13,7 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
-            player.anim.Play("arthur_crouch", 0, 0);
+            //player.anim.Play("arthur_crouch", 0, 0);
             player.xv = player.yv = 0;
         }
 
@@ -21,7 +21,7 @@ namespace Player
         {
             base.Exit();
 
-            player.anim.SetBool("crouch", false);
+        
         }
 
         public override void HandleInput()
@@ -32,6 +32,10 @@ namespace Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            player.CheckForWalk();
+            player.CheckForJump();
+            player.CheckForStand();
         }
 
         public override void PhysicsUpdate()
