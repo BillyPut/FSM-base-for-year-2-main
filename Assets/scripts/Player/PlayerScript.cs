@@ -15,8 +15,10 @@ namespace Player
         Collision col;
         public SpriteHelper sh;
         public LayerMask platformLayerMask;
+        public LayerMask climbableLayerMask;
         
         bool onPlatform;
+        public bool left = true;
         public bool jumpFlag, jumpButtonPressed, jumpButtonReleased;
         public bool shootButtonPressed, shootButtonReleased;
         public bool crouchButtonPressed, crouchButtonReleased;
@@ -47,6 +49,8 @@ namespace Player
         public CrouchingState crouchingState;
         public MovingState movingState;
         public StandingShootState standingShootState;
+        public ForwardJumpingState forwardJumpingState;
+        public ClimbingState climbingState;
 
         public StateMachine sm;
 
@@ -74,6 +78,8 @@ namespace Player
             crouchingState = new CrouchingState(this, sm);
             movingState = new MovingState(this, sm);
             standingShootState = new StandingShootState(this, sm);
+            forwardJumpingState = new ForwardJumpingState(this, sm);
+            climbingState = new ClimbingState(this, sm);
             
             // initialise the statemachine with the default state
             sm.Init(standingState);
@@ -97,6 +103,8 @@ namespace Player
             //CheckForStand();
             //CheckForMove();
             //CheckForLand();
+
+          
 
             if (onPlatform == false)
             {
@@ -129,6 +137,10 @@ namespace Player
             col.CheckTileCollisionPlatform(platformLayerMask, 0.38f, 0.4f, 0.11f);
             onPlatform = col.PlatformHit();
             col.ShowDebugCollisionPoints();
+
+         
+
+            
 
             sm.CurrentState.PhysicsUpdate();
             rb.velocity = new Vector2(xv, yv);
@@ -177,7 +189,7 @@ namespace Player
         public void CheckForStand()
         {
 
-            if (!Input.anyKey && onPlatform == true)
+            if (!Input.GetKey("right") && !Input.GetKey("left") && crouchButtonPressed == false && onPlatform == true && yv < 0.1)
             {
                 sm.ChangeState(standingState);
 
@@ -246,7 +258,21 @@ namespace Player
             }
         }
 
+        public void CheckForForwardJump()
+        {
+            if (jumpFlag == false)
+            {
+                if (jumpButtonPressed == true)
+                {
+                    sm.ChangeState(forwardJumpingState);
+                }
+            }
+        }
 
+        public void CheckForClimb()
+        {
+            
+        }
 
         public void ReadInputKeys()
         {

@@ -14,7 +14,7 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
-            //player.anim.Play("arthur_run", 0, 0);
+            player.anim.Play("arthur_run", 0, 0);
             if (Input.GetKey("right"))
             {
                 player.xv = 5;
@@ -44,7 +44,7 @@ namespace Player
 
             player.CheckForStand();
             player.CheckForLand();
-            player.CheckForJump();
+            player.CheckForForwardJump();
             player.CheckForCrouch();
             player.CheckForStandingShoot();
         }
@@ -54,10 +54,14 @@ namespace Player
             if (Input.GetKey("right"))
             {
                 player.xv = 5;
+                player.sh.SetSpriteXDirection(Dir.Right);
+                player.left = false;
             }
             if (Input.GetKey("left"))
             {
                 player.xv = -5;
+                player.sh.SetSpriteXDirection(Dir.Left);
+                player.left = true;
             }
             base.PhysicsUpdate();
         }

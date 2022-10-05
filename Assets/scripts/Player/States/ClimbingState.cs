@@ -1,27 +1,24 @@
 using UnityEngine;
 namespace Player
 {
-    public class CrouchingState : State
+    public class ClimbingState : State
     {
 
 
         // constructor
-        public CrouchingState(PlayerScript player, StateMachine sm) : base(player, sm)
+        public ClimbingState(PlayerScript player, StateMachine sm) : base(player, sm)
         {
         }
 
         public override void Enter()
         {
             base.Enter();
-            player.anim.Play("arthur_crouch", 0, 0);
             player.xv = player.yv = 0;
         }
 
         public override void Exit()
         {
             base.Exit();
-
-        
         }
 
         public override void HandleInput()

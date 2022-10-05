@@ -2,35 +2,45 @@
 using UnityEngine;
 namespace Player
 {
-    public class JumpingState : State
+    public class ForwardJumpingState : State
     {
         // constructor
-        public JumpingState(PlayerScript player, StateMachine sm) : base(player, sm)
+        public ForwardJumpingState(PlayerScript player, StateMachine sm) : base(player, sm)
         {
         }
 
         public override void Enter()
         {
             base.Enter();
-            player.anim.Play("arthur_jump_up", 0, 0);
+            player.anim.Play("arthur_jump_forward", 0, 0);
             if (player.jumpFlag == false)
             {
                 player.yv = 5;
+                
+                if(player.left == true)
+                {
+                    player.xv = -5;
+                }
+                else
+                {
+                    player.xv = 5;
+                }
+                
             }
             else
             {
                 Exit();
             }
-            
-            
+
+
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            
-            
+
+
         }
 
         public override void HandleInput()
